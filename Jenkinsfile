@@ -16,7 +16,6 @@ node {
 
         app.inside {
             sh 'psql srmsystem'
-            sh '\d'
         }
     }
 
