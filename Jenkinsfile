@@ -22,7 +22,7 @@ node {
     }*/
 
     stage('Push image') {
-        docker.withRegistry('https://hub.docker.com', 'docker_pass') {
+        docker.withRegistry('', 'docker_pass') {
             app.push()
         }
     }
