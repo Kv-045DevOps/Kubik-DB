@@ -1,27 +1,26 @@
 node {
     def app
 
+    // Checking, that the repository was cloned to workspace
     stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
+        
         checkout scm
     }
-
+    // Build docker image
     stage('Build image') {
 
         app = docker.build("akubrachenko/testjenkins:${env.BUILD_ID}")
     }
-
+    // Check dump file
     stage('Test image') {
-
         app.inside {
             sh 'dir /tmp'
         }
     }
-
-    /*stage('Push image') {
+    // Push image to the docker hub
+    stage('Push image') {
         docker.withRegistry('', 'docker_pass') {
             app.push()
         }
-    }*/
+    }
 }
