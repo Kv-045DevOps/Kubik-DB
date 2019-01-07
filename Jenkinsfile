@@ -12,18 +12,19 @@ node {
         app = docker.build("akubrachenko/testjenkins:${env.BUILD_ID}")
     }
 
-    /*stage('Test image') {
+    stage('Test image') {
         /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) 
+         * For this example, we're using a Volkswagen-type approach ;-) */
 
         app.inside {
-            sh 'echo "Tests passed"'
+            sh 'psql srmsystem'
+            sh '\d'
         }
-    }*/
+    }
 
-    stage('Push image') {
+    /*stage('Push image') {
         docker.withRegistry('', 'docker_pass') {
             app.push()
         }
-    }
+    }*/
 }
