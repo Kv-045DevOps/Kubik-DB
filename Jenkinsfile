@@ -15,7 +15,7 @@ node {
     stage('Test image') {
 
         app.inside {
-            sh 'psql srmsystem -U root'
+            sh 'dir /tmp'
         }
     }
 
