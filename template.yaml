@@ -1,16 +1,26 @@
 apiVersion: v1
-kind: Deployment
+kind: Pod
 metadata:
-  name: database
+  name: database-test
+  labels:
+    app: db-postgre
 spec:
   initContainers:
   - name: check-db-ready
     image: akubrachenko/kub-db:1.0
-    command: ['sh', '-c', 
-      'until pg_isready -h postgres -p 5432; 
-      do echo waiting for database; sleep 2; done;']
+    command: ['sh', '-c', 'until pg_isready -h database-test -p 5432; do echo waiting for database; sleep 2; done;']
   containers:
   - image: postgres:11.1
     name: postgresql
     ports:
     - containerPort: 5432
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: srmsystemdb
+spec:
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
