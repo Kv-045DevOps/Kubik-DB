@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  initContainers:
+  - name: check-db-ready
+    image: akubrachenko/kub-db:1.0
+    command: ['sh', '-c', 
+      'until pg_isready -h postgres -p 5432; 
+      do echo waiting for database; sleep 2; done;']
+  containers:
+  - image: postgres:11.1
+    name: postgresql
+    ports:
+    - containerPort: 5432
