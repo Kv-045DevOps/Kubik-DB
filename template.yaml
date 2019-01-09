@@ -1,19 +1,41 @@
-apiVersion: v1
-kind: Pod
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
-  name: database-test
-  labels:
-    app: db-postgre
+  name: postgres
 spec:
-  # initContainers:
-  # - name: check-db-ready
-  #   image: akubrachenko/kub-db:1.0
-  #   command: ['sh', '-c', 'until pg_isready -h database-test -p 5432; do echo waiting for database; sleep 2; done;']
-  containers:
-  - image: akubrachenko/kub-db:1.0
-    name: postgresql
-    ports:
-    - containerPort: 5432
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      # initContainers:
+      # - name: check-db-ready
+      #   image: akubrachenko/kub-db:1.0
+      #   command: ['sh', '-c', 'until pg_isready -h database-test -p 5432; do echo waiting for database; sleep 2; done;']
+      containers:
+      - image: akubrachenko/kub-db:1.0
+        name: postgresql
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/db-data
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 kind: Service
 apiVersion: v1
