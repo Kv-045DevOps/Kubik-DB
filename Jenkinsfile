@@ -9,7 +9,7 @@ node {
     // Build docker image
     stage('Build image') {
 
-        app = docker.build("akubrachenko/testjenkins:${env.BUILD_ID}")
+        app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
     }
     // Check dump file
     stage('Test image') {
