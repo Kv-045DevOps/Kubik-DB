@@ -11,7 +11,7 @@ node {
     stage('Build image') {
 
         //app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
-        sh 'echo $GIT_COMMIT'
+        sh "echo ${env.GIT_COMMIT}"
     }
     /*/ Check dump file
     stage('Test image') {
