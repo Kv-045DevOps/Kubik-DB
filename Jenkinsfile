@@ -7,7 +7,7 @@ node {
         checkout scm
         sh 'echo %GIT_COMMIT%'
     }
-    // Build docker image
+    /*/ Build docker image
     stage('Build image') {
 
         app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
@@ -23,5 +23,5 @@ node {
         docker.withRegistry('', 'docker_pass') {
             app.push()
         }
-    }
+    }*/
 }
