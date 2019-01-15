@@ -5,6 +5,7 @@ node {
     stage('Clone repository') {
         
         checkout scm
+        sh 'echo $GIT_COMMIT'
     }
     // Build docker image
     stage('Build image') {
