@@ -34,18 +34,31 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
+  replicas: 1
   template:
     metadata:
       labels:
         app: postgres
     spec:
-      # initContainers:
-      # - name: check-db-ready
-      #   image: akubrachenko/kub-db:1.0
-      #   command: ['sh', '-c', 'until pg_isready -h database-test -p 5432; do echo waiting for database; sleep 2; done;']
       containers:
-      - image: postgres:11.1
+      - image: postgres:9.6.2
         name: postgresql
+        env:
+        - name: POSTGRES_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbname
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
         ports:
         - containerPort: 5432
         volumeMounts:
