@@ -5,13 +5,15 @@ node {
     stage('Clone repository') {
         
         checkout scm
+        sh "git rev-parse --short HEAD > .git/commit-id"
+        gitTag = readFile ".git/commit-id"
 
     }
     // Build docker image
     stage('Build image') {
 
         //app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
-        sh "echo ${env.GIT_COMMIT}"
+        sh "echo ${gitTag}"
     }
     /*/ Check dump file
     stage('Test image') {
