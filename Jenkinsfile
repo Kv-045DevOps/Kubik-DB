@@ -5,8 +5,7 @@ node {
     stage('Clone repository') {
         
         checkout scm
-        sh "git rev-parse --short HEAD > .git/commit-id"
-        gitTag = readFile ".git/commit-id"
+        gitTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
 
     }
     // Build docker image

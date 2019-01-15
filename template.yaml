@@ -44,7 +44,7 @@ spec:
       #   image: akubrachenko/kub-db:1.0
       #   command: ['sh', '-c', 'until pg_isready -h database-test -p 5432; do echo waiting for database; sleep 2; done;']
       containers:
-      - image: akubrachenko/kub-db:1.0
+      - image: postgres:11.1
         name: postgresql
         ports:
         - containerPort: 5432
