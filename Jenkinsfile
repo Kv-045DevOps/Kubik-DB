@@ -5,14 +5,15 @@ node {
     stage('Clone repository') {
         
         checkout scm
-        sh 'echo %GIT_COMMIT%'
+
     }
-    /*/ Build docker image
+    // Build docker image
     stage('Build image') {
 
-        app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
+        //app = docker.build("akubrachenko/testjenkins:${env.GIT_COMMIT}")
+        sh 'echo $GIT_COMMIT'
     }
-    // Check dump file
+    /*/ Check dump file
     stage('Test image') {
         app.inside {
             sh 'dir /tmp'
