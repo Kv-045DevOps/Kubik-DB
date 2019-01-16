@@ -65,7 +65,7 @@ spec:
       - image: postgres:9.6.2
         name: postgresql
         env:
-        - name: POSTGRES_DATABASE
+        - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
               name: db-secret
