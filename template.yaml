@@ -1,3 +1,21 @@
+#Production namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  production
+---
+#Test secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name:  db-secret
+  namespace: production
+data:
+   username:  ZGJhZG1pbg==
+   password:  UGFzc3dvcmQ=
+   dbname: c3Jtc3lzdGVt
+type: Opaque
+
 ---
 kind: PersistentVolume
 apiVersion: v1
@@ -13,10 +31,12 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: production
   labels:
     app: postgres
   name: postgres-pv-claim
@@ -32,6 +52,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  namespace: production
   name: postgres
 spec:
   replicas: 1
@@ -73,6 +94,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
+  namespace: production
   name: srmsystemdb
 spec:
   ports:
