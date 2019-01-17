@@ -16,37 +16,50 @@ data:
    dbname: c3Jtc3lzdGVt
 type: Opaque
 
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: postgres-pv
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 2M
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 2M
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/mnt/data"
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   namespace: production
+#   labels:
+#     app: postgres
+#   name: postgres-pv-claim
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 2M
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: production
-  labels:
-    app: postgres
   name: postgres-pv-claim
 spec:
-  storageClassName: manual
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 2M
+      storage: 2Gi
 
 ---
 apiVersion: extensions/v1beta1
@@ -83,7 +96,7 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - name: postgres-pv-claim
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql/db-data
       volumes:
       - name: postgres-pv-claim
         persistentVolumeClaim:
