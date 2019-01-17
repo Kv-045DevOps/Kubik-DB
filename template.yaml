@@ -100,7 +100,7 @@ spec:
       volumes:
       - name: postgres-pv-claim
         persistentVolumeClaim:
-          claimName: pvc-postgres
+          claimName: postgres-pvc
 
 ---
 kind: Service
