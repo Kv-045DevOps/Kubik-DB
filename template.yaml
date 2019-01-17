@@ -16,21 +16,33 @@ data:
    dbname: c3Jtc3lzdGVt
 type: Opaque
 
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: postgres-pv
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 100M
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 100M
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/mnt/data"
+
+# ---
+# kind: StorageClass
+# apiVersion: storage.k8s.io/v1
+# metadata:
+#   name: slow
+# provisioner: kubernetes.io/aws-ebs
+# parameters:
+#   type: gp2
+#   zone: sa-east-1a
+#   fsType: ext4
+# reclaimPolicy: Retain
 
 ---
 apiVersion: v1
@@ -41,17 +53,19 @@ metadata:
     app: pvc-postgres
   name: postgres-pvc
 spec:
-  storageClassName: manual
+  #storageClassName: slow
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100M
+      storage: 2Gi
 
 # ---
 # apiVersion: v1
 # kind: PersistentVolumeClaim
 # metadata:
+#   labels:
+#     service: postgresdb
 #   namespace: production
 #   name: postgres-pvc
 # spec:
@@ -67,12 +81,22 @@ kind: Deployment
 metadata:
   namespace: production
   name: postgres
+  labels:
+    service: postgresdb
 spec:
   template:
     metadata:
       labels:
         app: postgres
     spec:
+      initContainers:
+      - name: volume-mount-hack
+        image: busybox
+        command: ["sh", "-c", "chown -R 999:999 /var/lib/postgresql/"]
+        volumeMounts:
+        - name: postgres-pv-claim
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
       containers:
       - image: postgres:9.6.2
         name: postgresql
@@ -97,6 +121,7 @@ spec:
         volumeMounts:
         - name: postgres-pv-claim
           mountPath: /var/lib/postgresql/data
+          subPath: postgres
       volumes:
       - name: postgres-pv-claim
         persistentVolumeClaim:
