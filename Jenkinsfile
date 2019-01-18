@@ -28,7 +28,7 @@ node(label)
         stage("Git Checkout"){
             git(
                 branch: "master",
-                url: 'https://github.com/Kv-045DevOps/Kubik-DB.git')
+                url: 'https://github.com/Kv-045DevOps/Kubik-DB.git',
                 credentialsId: "${Creds}")
             sh "git rev-parse --short HEAD > .git/commit-id"
             imageTag= readFile ".git/commit-id"
