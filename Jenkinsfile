@@ -15,11 +15,11 @@ def label = "mypod-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-]
-) 
+], serviceAccount: "jenkins") 
 {
 
 def Creds = "git_cred"
+def imageTag
 
 
 node(label)
@@ -30,8 +30,7 @@ node(label)
                 branch: "master",
                 url: 'https://github.com/Kv-045DevOps/Kubik-DB.git',
                 credentialsId: "${Creds}")
-            sh "git rev-parse --short HEAD > .git/commit-id"
-            imageTag= readFile ".git/commit-id"
+            imageTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
         }
         stage("Deploy to Kubernetes"){
 			container('kubectl'){
