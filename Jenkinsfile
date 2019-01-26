@@ -38,6 +38,7 @@ node(label)
 				sh "kubectl get pods --namespace=production"
 			}
         }
+}
     catch(err){
         currentBuild.result = 'Failure'
     }
