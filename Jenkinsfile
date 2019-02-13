@@ -1,5 +1,5 @@
 def buildResult
-def paramss = ["GitHub/SRM-GET/PR-3", "GitHub/SRM-UI/test", "GitHub/SRM-DB/PR-2", "GitHub/SRM-POST/PR-4"]
+def paramss = ["GitHub/SRM-GET/PR-3", "GitHub/SRM-UI/test", "GitHub/SRM-DB/PR-2", "GitHub/SRM-POST/master"]
 def dockerRegistry = "100.71.71.71:5000"
 def Creds = "git_cred"
 properties([
