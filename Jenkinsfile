@@ -21,7 +21,7 @@ properties([
             description: 'Current version', 
             name: 'imageTagPOST_'),
         stringParam(
-            defaultValue: '*', 
+            defaultValue: '', 
             description: 'E2E Test', 
             name: 'e2e_YAML')
     ])
