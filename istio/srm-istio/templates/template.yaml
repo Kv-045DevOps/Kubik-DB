@@ -1,0 +1,68 @@
+---
+#Ingress Controller
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: srm-gateway
+  namespace: production
+spec:
+  selector:
+    istio: ingressgateway 
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "*"
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+    hosts:
+    - "*"
+---
+#Egress controller
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: rds-external
+  namespace: production
+spec:
+  hosts:
+  - {{ .Values.pghost }}
+  addresses:
+  - {{ .Values.pgaddr }}
+  ports:
+  - name: tcp
+    number: 5432
+    protocol: tcp
+  location: MESH_EXTERNAL
+
+---
+#Virtual Service for UI
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: srm-system
+  namespace: production
+spec:
+  hosts:
+  - "srm.cooki3.com"
+  gateways:
+  - srm-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: ui
+        port:
+          number: 5000
