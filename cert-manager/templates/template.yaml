@@ -6,7 +6,7 @@ metadata:
   namespace: cert-manager
 type: Opaque
 data:
-  secret-access-key: {{ .Values.secretkey }}
+  secret-access-key: {{ .Values.secretkey | b64enc }}
 
 ---
 #Cluster issuer
