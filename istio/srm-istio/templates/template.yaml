@@ -45,6 +45,23 @@ spec:
     protocol: tcp
   location: MESH_EXTERNAL
 
+#Destination rule
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ui
+  namespace: production
+spec:
+  host: ui
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+
 ---
 #Virtual Service for UI
 apiVersion: networking.istio.io/v1alpha3
@@ -64,5 +81,13 @@ spec:
     route:
     - destination:
         host: ui
+        subset: v1
         port:
           number: 5000
+      weight: 100
+    - destination:
+        host: ui
+        subset: v2
+        port:
+          number: 5000
+      weight: 0
